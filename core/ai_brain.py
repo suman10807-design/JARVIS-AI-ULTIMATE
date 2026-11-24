@@ -12,7 +12,7 @@ class JarvisBrain:
             raise ValueError("OpenAI API key is missing.")
 
         self.client = OpenAI(api_key=api_key)
-        self.model = os.getenv("JARVIS_MODEL", "gpt-5.5")
+        self.model = os.getenv("JARVIS_MODEL", "gpt-6.2-astra")
 
         self.history = []
 
