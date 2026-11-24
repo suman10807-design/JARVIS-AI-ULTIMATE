@@ -1,24 +1,74 @@
 
-"""
-JARVIS AI ULTIMATE
-Personal AI Desktop Assistant
-"""
+import os
+from dotenv import load_dotenv
 
-APP_NAME = "JARVIS AI ULTIMATE"
-VERSION = "1.0"
+from core.ai_brain import JarvisBrain
+from voice.speaker import JarvisSpeaker
+from voice.listener import JarvisListener
+from desktop.controller import JarvisController
 
 
-def startup():
-    print("=" * 50)
-    print("       JARVIS AI ULTIMATE")
-    print("=" * 50)
-    print("Initializing JARVIS systems...")
-    print("AI Engine       : Waiting")
-    print("Voice Engine    : Waiting")
-    print("Desktop Control : Waiting")
-    print("=" * 50)
-    print("Welcome! JARVIS is ready for development.")
+load_dotenv()
+
+
+class Jarvis:
+
+    def __init__(self):
+        print("Initializing JARVIS...")
+
+        self.brain = JarvisBrain()
+        self.speaker = JarvisSpeaker()
+        self.listener = JarvisListener()
+        self.controller = JarvisController()
+
+        print("All systems initialized.")
+
+    def run(self):
+
+        self.speaker.speak(
+            "Hello. I am JARVIS. How may I help you?"
+        )
+
+        while True:
+
+            question = self.listener.listen()
+
+            if not question:
+                continue
+
+            command = question.lower().strip()
+
+            if command in ["exit", "quit", "shutdown jarvis"]:
+                self.speaker.speak(
+                    "Goodbye. JARVIS shutting down."
+                )
+                break
+
+            if command == "open notepad":
+                result = self.controller.open_application(
+                    "notepad"
+                )
+                print("JARVIS:", result)
+                self.speaker.speak(result)
+                continue
+
+            print("JARVIS is thinking...")
+
+            answer = self.brain.ask(question)
+
+            print("\nJARVIS:", answer)
+
+            self.speaker.speak(answer)
 
 
 if __name__ == "__main__":
-    startup()
+
+    try:
+        jarvis = Jarvis()
+        jarvis.run()
+
+    except KeyboardInterrupt:
+        print("\nJARVIS stopped.")
+
+    except Exception as error:
+        print("JARVIS startup error:", error)
